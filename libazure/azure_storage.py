@@ -30,8 +30,8 @@ class AzureStorage():
     def put_blob(self, container_name, blob_name, data, content_type = None):
         return self.blob_proxy.put_blob(container_name, blob_name, data, content_type)
 
-    def get_blob(self, container_name, blob_name):
-        return self.blob_proxy.get_blob(container_name, blob_name)
+    def get_blob(self, container_name, blob_name, offset = None, size = None):
+        return self.blob_proxy.get_blob(container_name, blob_name, offset = None, size = None)
 
     def delete_blob(self, container_name, blob_name):
         return self.blob_proxy.delete_blob(container_name, blob_name)

@@ -64,8 +64,10 @@ class BlobStorage(Storage):
             return e.code
 
 
-    def get_blob(self, container_name, blob_name):
+    def get_blob(self, container_name, blob_name, offset = None, size = None):
         req = Request("%s/%s/%s" % (self.get_base_url(), container_name, blob_name))
+        if offset is not None and size is not None:
+            req.add_header("Range", ("bytes=%d-%d" % (offset, offset + size - 1)))
         self._credentials.sign_request(req)
         return urlopen(req).read()
 
