@@ -1,5 +1,5 @@
 from urllib2 import Request
-import base64 
+import base64
 import re
 import time
 import hmac
@@ -40,7 +40,7 @@ class SharedKeyCredentials(object):
         match = re.search(r'comp=[^&]*', query)
         if match is not None:
             canonicalized_resource += "?" + match.group(0)
-            
+
         if use_path_style_uris is None:
             use_path_style_uris = re.match('^[\d.:]+$', host) is not None
 
@@ -57,7 +57,7 @@ class SharedKeyCredentials(object):
         if not for_tables:
             string_to_sign += canonicalized_headers + NEW_LINE   # Canonicalized headers
         string_to_sign += canonicalized_resource                 # Canonicalized resource
-        
+
         request.add_header('Authorization', 'SharedKey ' + self._account + ':' + base64.encodestring(hmac.new(self._key, unicode(string_to_sign).encode("utf-8"), hashlib.sha256).digest()).strip())
         return request
 
@@ -76,18 +76,18 @@ class Storage(object):
             use_path_style_uris = re.match(r'^[^:]*[\d:]+$', self._host)
         self._use_path_style_uris = use_path_style_uris
         self._credentials = SharedKeyCredentials(self._account, self._key)
-        
+
     def get_base_url(self):
         if self._use_path_style_uris:
             return "http://%s/%s" % (self._host, self._account)
         else:
             return "http://%s.%s" % (self._account, self._host)
-        
+
 def parse_edm_datetime(input):
     d = datetime.strptime(input[:input.find('.')], "%Y-%m-%dT%H:%M:%S")
     if input.find('.') != -1:
         d += timedelta(0, 0, int(round(float(input[input.index('.'):-1])*1000000)))
-    return d        
+    return d
 
 def parse_edm_int32(input):
     return int(input)

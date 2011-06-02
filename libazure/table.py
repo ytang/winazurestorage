@@ -50,14 +50,14 @@ class TableStorage(Storage):
             return response.code
         except URLError, e:
             return e.code
-        
+
     def list_tables(self):
         req = Request("%s/Tables" % self.get_base_url())
         self._credentials.sign_table_request(req)
         response = urlopen(req)
 
         dom = minidom.parseString(response.read())
-        
+
         entries = dom.getElementsByTagName("entry")
         for entry in entries:
             table_url = entry.getElementsByTagName("id")[0].firstChild.data

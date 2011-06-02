@@ -27,7 +27,7 @@ class QueueStorage(Storage):
             return response.code
         except URLError, e:
             return e.code
-            
+
     def put_message(self, queue_name, payload):
         data = "<QueueMessage><MessageText>%s</MessageText></QueueMessage>" % base64.encodestring(payload)
         req = RequestWithMethod("POST", "%s/%s/messages" % (self.get_base_url(), queue_name), data=data)

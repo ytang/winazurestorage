@@ -37,7 +37,7 @@ class BlobStorage(Storage):
             etag = container.getElementsByTagName("Etag")[0].firstChild.data
             last_modified = time.strptime(container.getElementsByTagName("LastModified")[0].firstChild.data, TIME_FORMAT)
             yield (container_name, etag, last_modified)
-        
+
         dom.unlink() #Docs say to do this to force GC. Ugh.
 
     def list_blobs(self, container_name):
@@ -47,10 +47,10 @@ class BlobStorage(Storage):
         blobs = dom.getElementsByTagName("Blob")
         res = []
         for blob in blobs:
-            res.append(blob.getElementsByTagName("Name")[0].firstChild.data)            
+            res.append(blob.getElementsByTagName("Name")[0].firstChild.data)
         dom.unlink()
         return res
-        
+
 
     def put_blob(self, container_name, blob_name, data, content_type = None):
         req = RequestWithMethod("PUT", "%s/%s/%s" % (self.get_base_url(), container_name, blob_name), data=data)
@@ -62,14 +62,14 @@ class BlobStorage(Storage):
             return response.code
         except URLError, e:
             return e.code
-        
+
 
     def get_blob(self, container_name, blob_name):
         req = Request("%s/%s/%s" % (self.get_base_url(), container_name, blob_name))
         self._credentials.sign_request(req)
         return urlopen(req).read()
-    
-    def delete_blob(self, container_name, blob_name):        
+
+    def delete_blob(self, container_name, blob_name):
         req = RequestWithMethod("DELETE", "%s/%s/%s" % (self.get_base_url(), container_name, blob_name))
         self._credentials.sign_request(req)
         return urlopen(req).read()
